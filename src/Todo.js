@@ -1,4 +1,6 @@
 import React, { Component } from "react";
+import "./Todo.css";
+import { CSSTransition, TransitionGroup } from "react-transition-group";
 
 class Todo extends Component {
   constructor(props) {
@@ -7,6 +9,7 @@ class Todo extends Component {
     this.toggleForm = this.toggleForm.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.handleUpdate = this.handleUpdate.bind(this);
+    this.handleToggle = this.handleToggle.bind(this);
     this.state = {
       isEditing: false,
       task: this.props.task,
@@ -22,6 +25,9 @@ class Todo extends Component {
     });
   }
 
+  handleToggle(evt) {
+    this.props.toggleTodo(this.props.id);
+  }
   handleUpdate(evt) {
     evt.preventDefault();
     this.props.updateTodo(this.props.id, this.state.task);
@@ -36,8 +42,8 @@ class Todo extends Component {
     let result;
     if (this.state.isEditing) {
       result = (
-        <div>
-          <form onSubmit={this.handleUpdate}>
+        <CSSTransition key="editing" timeout={500} classNames="form">
+          <form className="Todo-edit-form" onSubmit={this.handleUpdate}>
             <input
               type="text"
               name="task"
@@ -46,18 +52,32 @@ class Todo extends Component {
             />
             <button>Save</button>
           </form>
-        </div>
+        </CSSTransition>
       );
     } else {
       result = (
-        <div>
-          <button onClick={this.toggleForm}>Edit</button>
-          <button onClick={this.handleRemove}>X</button>
-          <li>{this.props.task}</li>
-        </div>
+        <CSSTransition key="normal" timeout={500} classNames="task-text">
+          <li className="Todo-task" onClick={this.handleToggle}>
+            {this.props.task}
+          </li>
+        </CSSTransition>
       );
     }
-    return result;
+    return (
+      <TransitionGroup
+        className={this.props.completed ? "Todo completed" : "Todo"}
+      >
+        {result}
+        <div className="Todo-buttons">
+          <button onClick={this.toggleForm}>
+            <i class="fas fa-pen" />
+          </button>
+          <button onClick={this.handleRemove}>
+            <i class="fas fa-trash" />
+          </button>
+        </div>
+      </TransitionGroup>
+    );
   }
 }
 
