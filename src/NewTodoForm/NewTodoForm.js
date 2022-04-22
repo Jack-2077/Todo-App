@@ -1,13 +1,12 @@
-import React from 'react';
-import uuid from 'uuid';
+import React, { useState } from 'react';
+import { v4 as uuid } from 'uuid';
 import './NewTodoForm.css';
-
-import React from 'react';
 
 export default function NewTodoForm({ createTodo }) {
   const [task, setTask] = useState('');
 
-  const handleSubmit = () => {
+  const handleSubmit = (e) => {
+    e.preventDefault();
     if (task.trim()) {
       createTodo({ task, id: uuid(), completed: false });
       setTask('');

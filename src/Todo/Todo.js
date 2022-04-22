@@ -1,8 +1,6 @@
-import React, { Component } from 'react';
+import React, { useState } from 'react';
 import './Todo.css';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
-
-import React from 'react';
 
 export default function Todo({
   removeTodo,
@@ -66,54 +64,12 @@ export default function Todo({
       {result}
       <div className='Todo-buttons'>
         <button onClick={toggleForm}>
-          <i class='fas fa-pen' />
+          <i className='fas fa-pen' />
         </button>
         <button onClick={handleRemove}>
-          <i class='fas fa-trash' />
+          <i className='fas fa-trash' />
         </button>
       </div>
     </TransitionGroup>
   );
-}
-
-class Todo extends Component {
-  render() {
-    let result;
-    if (tasks.isEditing) {
-      result = (
-        <CSSTransition key='editing' timeout={500} classNames='form'>
-          <form className='Todo-edit-form' onSubmit={this.handleUpdate}>
-            <input
-              type='text'
-              name='task'
-              value={tasks.task}
-              onChange={handleChange}
-            />
-            <button>Save</button>
-          </form>
-        </CSSTransition>
-      );
-    } else {
-      result = (
-        <CSSTransition key='normal' timeout={500} classNames='task-text'>
-          <li className='Todo-task' onClick={handleToggle}>
-            {task}
-          </li>
-        </CSSTransition>
-      );
-    }
-    return (
-      <TransitionGroup className={completed ? 'Todo completed' : 'Todo'}>
-        {result}
-        <div className='Todo-buttons'>
-          <button onClick={toggleForm}>
-            <i class='fas fa-pen' />
-          </button>
-          <button onClick={handleRemove}>
-            <i class='fas fa-trash' />
-          </button>
-        </div>
-      </TransitionGroup>
-    );
-  }
 }
