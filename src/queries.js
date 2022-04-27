@@ -35,7 +35,9 @@ export const TOGGLE_TODO = gql`
 export const UPDATE_TODO = gql`
   mutation updateTodo($id: uuid!, $newTask: String!) {
     update_todos_by_pk(pk_columns: { id: $id }, _set: { todo: $newTask }) {
+      completed
       id
+      todo
     }
   }
 `;

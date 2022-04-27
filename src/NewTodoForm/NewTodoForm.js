@@ -1,15 +1,29 @@
-import React, { useState } from 'react';
-import { v4 as uuid } from 'uuid';
+import { useState } from 'react';
+
+import { useMutation } from '@apollo/client';
+import { ADD_TODO, GET_TODOS } from '../queries';
+
 import './NewTodoForm.css';
 
-export default function NewTodoForm({ createTodo }) {
+export default function NewTodoForm() {
+  const [addTodo] = useMutation(ADD_TODO);
   const [task, setTask] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (task.trim()) {
-      createTodo({ task, id: uuid(), completed: false });
-      setTask('');
+      async function addTodoTask() {
+        await addTodo({
+          variables: { todo: task },
+          update: (cache) => {
+            const prevData = cache.readQuery({ query: GET_TODOS });
+            const newTodos = [...prevData.todos, task];
+            cache.writeQuery({ query: GET_TODOS, data: { todos: newTodos } });
+          },
+        });
+        setTask('');
+      }
+      addTodoTask();
     }
   };
 
